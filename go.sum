@@ -1,5 +1,3 @@
-github.com/ani5msr/rest-go v0.0.0-20230330130307-d23737924804 h1:gIpuDaDia3VjoPWRQvG7SS0CdWEaAnz1Mhn22tTPX/k=
-github.com/ani5msr/rest-go v0.0.0-20230330130307-d23737924804/go.mod h1:xiWZm8U3E5HmACgvjCjy01SD3ZQS0pvDQeMS1OXRYNA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
