@@ -6,8 +6,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
+	"github.com/ani5msr/rest-go/redis"
 	"github.com/gorilla/mux"
 )
 
@@ -22,29 +24,31 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
 	fmt.Println("Endpoint Hit: homePage")
 }
-func cmdprocess(words string[]){
-    if(words[0] == "SET"){
+func cmdprocess(words []string) {
+	if words[0] == "SET" {
 		key := words[1]
 		value := words[2]
-		if(words[3] == "EX"){
+		if words[3] == "EX" {
 			expiry := words[4]
-			if(words[4] == "NX" || words[4] == "XX"){
-            
+			exp, _ := strconv.ParseInt(expiry, 10, 8)
+			if words[4] == "NX" || words[4] == "XX" {
+				res := redis.SetRedis(key, value, exp)
 			}
 		}
 
-	}else if(words[0] == "GET"){
+	} else if words[0] == "GET" {
 		key := words[1]
 		value := words[2]
-		
-	}else if(words[0] == "QPUSH"){
 
-	}else if(words[0] == "QPOP"){
+	} else if words[0] == "QPUSH" {
 
-	}else if(words[0] == "BQPOP"){
+	} else if words[0] == "QPOP" {
+
+	} else if words[0] == "BQPOP" {
 
 	}
 }
+
 func createNewPost(w http.ResponseWriter, r *http.Request) {
 	// get the body of our POST request
 	// return the string response containing the request body
