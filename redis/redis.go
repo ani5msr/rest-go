@@ -13,7 +13,7 @@ func RedisConnect() *redis.Client {
 		DB:       0,
 	})
 
-	pong, err := client.Ping(client.Context()).Result()
+	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
 	return client
 }
