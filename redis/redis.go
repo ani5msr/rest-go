@@ -1,6 +1,8 @@
 package redis
 
 import (
+	"fmt"
+
 	"github.com/go-redis/redis"
 )
 
@@ -10,5 +12,8 @@ func RedisConnect() *redis.Client {
 		Password: "",
 		DB:       0,
 	})
+
+	pong, err := client.Ping(client.Context()).Result()
+	fmt.Println(pong, err)
 	return client
 }
