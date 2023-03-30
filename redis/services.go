@@ -1,14 +1,12 @@
 package redis
 
 import (
-	"encoding/json"
 	"log"
 )
 
-func SetRedis(value string, key string, expiry string) int64 {
-	redis := RedisConnect() // create the postgres db connection
+func SetRedis(words string) int64 {
+	redis := RedisConnect()
 	var status int64 = 1
-	json, _ := json.Marshal(user)
 	err := redis.Set(value, key, expiry).Err()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", err)
