@@ -17,15 +17,13 @@ func SetRedis(key string, value string, exp int64) int64 {
 	}
 	return status
 }
-func GetRedis(key string, value string, exp int) int64 {
-
-	exptime := time.Duration(exp) * time.Second
+func GetRedis(key string) string {
 	redis := RedisConnect()
-	var status int64 = 1
-	err := redis.Set(value, key, exptime).Err()
+	val, err := redis.Get(key).Result()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", err)
-		return 0
+		get_err := "key not found"
+		return get_err
 	}
-	return status
+	return val
 }
