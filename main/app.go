@@ -59,7 +59,6 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &req)
 	words := strings.Fields(req.Command)
 	if words[0] == "GET" {
-		fmt.Fprintf(w, "%+v", string(reqBody))
 		key := words[1]
 		res := redis.GetRedis(key)
 		respval := RespBody{Value: res}
