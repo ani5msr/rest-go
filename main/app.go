@@ -35,16 +35,15 @@ func createNewPost(w http.ResponseWriter, r *http.Request) {
 	var req CmdRequest
 	json.Unmarshal(reqBody, &req)
 	words := strings.Fields(req.Command)
+	w.Header().Set("Content-Type", "application/json")
 	if words[0] == "SET" {
 		key := words[1]
 		value := words[2]
 		if words[3] == "EX" {
 			expiry := words[4]
 			exp, _ := strconv.ParseInt(expiry, 10, 64)
-			if words[4] == "NX" || words[4] == "XX" {
-				res := redis.SetRedis(key, value, exp)
-				fmt.Fprintf(w, "%+v", string(res))
-			}
+			res := redis.SetRedis(key, value, exp)
+			fmt.Fprintf(w, "%+v", string(res))
 		}
 
 	} else {

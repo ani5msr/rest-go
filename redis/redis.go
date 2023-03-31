@@ -1,9 +1,7 @@
 package redis
 
 import (
-	"fmt"
-
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 )
 
 func RedisConnect() *redis.Client {
@@ -13,13 +11,5 @@ func RedisConnect() *redis.Client {
 		DB:       0,
 	})
 
-	pong, err := client.Ping().Result()
-	if err != nil {
-		return err
-	}
-	fmt.Println(pong, err)
-	// Output: PONG <nil>
-
-	return nil
 	return client
 }
