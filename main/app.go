@@ -40,7 +40,7 @@ func createNewPost(w http.ResponseWriter, r *http.Request) {
 		value := words[2]
 		if words[3] == "EX" {
 			expiry := words[4]
-			exp, _ := strconv.ParseInt(expiry, 10, 8)
+			exp, _ := strconv.ParseInt(expiry, 10, 64)
 			if words[4] == "NX" || words[4] == "XX" {
 				res := redis.SetRedis(key, value, exp)
 				fmt.Fprintf(w, "%+v", string(res))
@@ -59,6 +59,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(reqBody, &req)
 	words := strings.Fields(req.Command)
 	if words[0] == "GET" {
+		fmt.Fprintf(w, "%+v", string(reqBody))
 		key := words[1]
 		res := redis.GetRedis(key)
 		respval := RespBody{Value: res}
