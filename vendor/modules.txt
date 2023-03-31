@@ -4,6 +4,9 @@ github.com/cespare/xxhash/v2
 # github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f
 ## explicit
 github.com/dgryski/go-rendezvous
+# github.com/gammazero/deque v0.2.1
+## explicit; go 1.18
+github.com/gammazero/deque
 # github.com/go-redis/redis v6.15.9+incompatible
 ## explicit
 # github.com/go-redis/redis/v8 v8.11.5
