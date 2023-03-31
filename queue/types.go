@@ -11,3 +11,11 @@ type BQPopRequest struct {
 	name string
 	time int
 }
+type Deque[T any] struct {
+	buf    []T
+	head   int
+	tail   int
+	count  int
+	minCap int
+	name   string
+}
