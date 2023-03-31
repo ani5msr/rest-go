@@ -7,12 +7,12 @@ import (
 )
 
 var ctx = context.Background()
+var redisconn = RedisConnect()
 
 func SetRedis(key string, value string, exp int64) int64 {
 	exptime := time.Duration(exp) * time.Second
-	redis := RedisConnect()
 	var status int64 = 1
-	err := redis.Set(ctx, value, key, exptime).Err()
+	err := redisconn.Set(ctx, value, key, exptime).Err()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", err)
 		return 0
@@ -20,8 +20,7 @@ func SetRedis(key string, value string, exp int64) int64 {
 	return status
 }
 func GetRedis(key string) string {
-	redis := RedisConnect()
-	val, err := redis.Get(ctx, key).Result()
+	val, err := redisconn.Get(ctx, key).Result()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", err)
 		get_err := "key not found"
