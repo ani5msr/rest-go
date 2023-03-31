@@ -22,6 +22,10 @@ type ErrBody struct {
 type RespBody struct {
 	Value string `json:"value"`
 }
+type Response struct {
+	Status  int64  `json:"status"`
+	Message string `json:"message"`
+}
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
@@ -42,8 +46,12 @@ func createNewPost(w http.ResponseWriter, r *http.Request) {
 		if words[3] == "EX" {
 			expiry := words[4]
 			exp, _ := strconv.ParseInt(expiry, 10, 64)
-			res := redis.SetRedis(key, value, exp)
-			fmt.Fprintf(w, "%+v", string(res))
+			stat := redis.SetRedis(key, value, exp)
+			res := Response{
+				Status:  stat,
+				Message: "User inserted to redis successFully!!!",
+			}
+			json.NewEncoder(w).Encode(res)
 		}
 
 	} else {
