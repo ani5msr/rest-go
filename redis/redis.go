@@ -14,6 +14,12 @@ func RedisConnect() *redis.Client {
 	})
 
 	pong, err := client.Ping().Result()
+	if err != nil {
+		return err
+	}
 	fmt.Println(pong, err)
+	// Output: PONG <nil>
+
+	return nil
 	return client
 }
