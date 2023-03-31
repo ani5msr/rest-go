@@ -23,7 +23,7 @@ type RespBody struct {
 	Value string `json:"value"`
 }
 type Response struct {
-	Status  int64  `json:"status"`
+	Status  string `json:"status"`
 	Message string `json:"message"`
 }
 
@@ -65,12 +65,12 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	var req CmdRequest
 	json.Unmarshal(reqBody, &req)
 	words := strings.Fields(req.Command)
+	w.Header().Set("Content-Type", "application/json")
 	if words[0] == "GET" {
 		fmt.Fprintf(w, "%+v", string(reqBody))
 		key := words[1]
 		res := redis.GetRedis(key)
 		respval := RespBody{Value: res}
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(respval)
 	} else {
