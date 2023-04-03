@@ -11,11 +11,12 @@ var ctx = context.Background()
 var redisconn = RedisConnect()
 var mu sync.RWMutex
 
-func SetRedis(key string, value string, exp int64) string {
-	exptime := time.Duration(exp) * time.Second
-	mu.Lock()
+func SetRedis(req SetInterface) string {
+	exptime := time.Duration(req.Expiry) * time.Second
+	req.Lock.Lock()
+	defer req.Lock.Unlock()
 	defer mu.Unlock()
-	stat, err := redisconn.Set(ctx, key, value, exptime).Result()
+	stat, err := redisconn.Set(ctx, req.Key, req.Value, exptime).Result()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", err)
 		return "fail"

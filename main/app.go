@@ -55,6 +55,11 @@ func createNewPost(w http.ResponseWriter, r *http.Request) {
 		if words[3] == "EX" {
 			expiry := words[4]
 			exp, _ := strconv.ParseInt(expiry, 10, 64)
+			requestinstance := redis.SetInterface{
+				Key:    key,
+				Value:  value,
+				Expiry: exp,
+			}
 			stat := redis.SetRedis(key, value, exp)
 			res := Response{
 				Status:  stat,
