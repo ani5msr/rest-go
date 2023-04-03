@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 
 	m "github.com/ani5msr/rest-go/queue"
 	"github.com/ani5msr/rest-go/redis"
@@ -59,8 +60,9 @@ func createNewPost(w http.ResponseWriter, r *http.Request) {
 				Key:    key,
 				Value:  value,
 				Expiry: exp,
+				Lock:   sync.Mutex{},
 			}
-			stat := redis.SetRedis(key, value, exp)
+			stat := redis.SetRedis(requestinstance)
 			res := Response{
 				Status:  stat,
 				Message: "User inserted to redis successFully!!!",
@@ -83,7 +85,11 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	if words[0] == "GET" {
 		fmt.Fprintf(w, "%+v", string(reqBody))
 		key := words[1]
-		res := redis.GetRedis(key)
+		requestinstance := redis.GetInterface{
+			Key:  key,
+			Lock: sync.Mutex{},
+		}
+		res := redis.GetRedis(requestinstance)
 		respval := RespBody{Value: res}
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(respval)
@@ -102,12 +108,7 @@ func queuepush(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if words[0] == "QPUSH" {
 		fmt.Fprintf(w, "%+v", string(reqBody))
-		name := words[1]
-		key := words[2]
-		res := redis.GetRedis(key)
-		respval := RespBody{Value: res}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(respval)
 	} else {
 		fmt.Fprintf(w, "invalid command")
 	}

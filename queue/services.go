@@ -12,10 +12,6 @@ type QueueInstance struct {
 
 var qumap = make(map[string][]string)
 
-func (m *QueueInstance) PushIn(request QPushRequest) {
-	m.Q.PushBack(request.val)
-
-}
 func NewQueue(queue QueueRest, name string) {
 
 }

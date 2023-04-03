@@ -8,3 +8,7 @@ type SetInterface struct {
 	Expiry int64
 	Lock   sync.Mutex
 }
+type GetInterface struct {
+	Key  string
+	Lock sync.Mutex
+}
