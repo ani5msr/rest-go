@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	m "github.com/ani5msr/rest-go/queue"
 	"github.com/ani5msr/rest-go/redis"
 	"github.com/gammazero/deque"
 	"github.com/gorilla/mux"
@@ -31,6 +32,9 @@ type QueueInstance struct {
 	Q    deque.Deque[string]
 	Name string
 }
+
+var comp m.QueueInstance
+var queuemap = make(map[string]*QueueInstance)
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
@@ -83,6 +87,27 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func queuepush(w http.ResponseWriter, r *http.Request) {
+	// get the body of our POST request
+	// return the string response containing the request body
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var req CmdRequest
+	json.Unmarshal(reqBody, &req)
+	words := strings.Fields(req.Command)
+	w.Header().Set("Content-Type", "application/json")
+	if words[0] == "QPUSH" {
+		fmt.Fprintf(w, "%+v", string(reqBody))
+		name := words[1]
+		key := words[2]
+		res := redis.GetRedis(key)
+		respval := RespBody{Value: res}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(respval)
+	} else {
+		fmt.Fprintf(w, "invalid command")
+	}
+}
+
 func handleRequests() {
 	// creates a new instance of a mux router
 	myRouter := mux.NewRouter().StrictSlash(true)
@@ -90,6 +115,7 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/post", createNewPost)
 	myRouter.HandleFunc("/get", getPost)
+	myRouter.HandleFunc("/pushqueue", queuepush)
 	// finally, instead of passing in nil, we want
 	// to pass in our newly created router as the second
 	// argument
