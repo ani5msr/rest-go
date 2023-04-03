@@ -3,14 +3,18 @@ package redis
 import (
 	"context"
 	"log"
+	"sync"
 	"time"
 )
 
 var ctx = context.Background()
 var redisconn = RedisConnect()
+var mu sync.RWMutex
 
 func SetRedis(key string, value string, exp int64) string {
 	exptime := time.Duration(exp) * time.Second
+	mu.Lock()
+	defer mu.Unlock()
 	stat, err := redisconn.Set(ctx, key, value, exptime).Result()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", err)
@@ -19,6 +23,8 @@ func SetRedis(key string, value string, exp int64) string {
 	return stat
 }
 func GetRedis(key string) string {
+	mu.Lock()
+	defer mu.Unlock()
 	val, err := redisconn.Get(ctx, key).Result()
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v into Redis", key)

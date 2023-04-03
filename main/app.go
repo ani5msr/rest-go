@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ani5msr/rest-go/redis"
+	"github.com/gammazero/deque"
 	"github.com/gorilla/mux"
 )
 
@@ -26,8 +27,10 @@ type Response struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 }
-
-var queuemap map[string]QueueInstance
+type QueueInstance struct {
+	Q    deque.Deque[string]
+	Name string
+}
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
@@ -71,27 +74,6 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	if words[0] == "GET" {
 		fmt.Fprintf(w, "%+v", string(reqBody))
 		key := words[1]
-		res := redis.GetRedis(key)
-		respval := RespBody{Value: res}
-		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(respval)
-	} else {
-		fmt.Fprintf(w, "invalid command")
-	}
-}
-
-func queuePush(w http.ResponseWriter, r *http.Request) {
-	// get the body of our POST request
-	// return the string response containing the request body
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	var req CmdRequest
-	json.Unmarshal(reqBody, &req)
-	words := strings.Fields(req.Command)
-	w.Header().Set("Content-Type", "application/json")
-	if words[0] == "QPUSH" {
-		fmt.Fprintf(w, "%+v", string(reqBody))
-		key := words[1]
-
 		res := redis.GetRedis(key)
 		respval := RespBody{Value: res}
 		w.WriteHeader(http.StatusCreated)
