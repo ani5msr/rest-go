@@ -1,19 +1,26 @@
 package queue
 
 import (
-	"sync"
-
-	"github.com/gammazero/deque"
+	"sync/atomic"
 )
 
-type QueueInstance struct {
-	Q    deque.Deque[string]
-	Lock sync.RWMutex
-	Name string
+func NewQueueRest[T comparable]() *QueueRest[T] {
+	return &QueueRest[T]{
+		items:   make(chan T, 1),
+		counter: 0,
+	}
+}
+func (q *QueueRest[T]) Enqueue(item T) {
+	// counter variable atomically incremented
+	atomic.AddUint64(&q.counter, 1)
+	// put item to channel
+	q.items <- item
 }
 
-var qumap = make(map[string][]string)
-
-func NewQueue(queue QueueRest, name string) {
-
+func (q *QueueRest[T]) Dequeue() T {
+	// read item from channel
+	item := <-q.items
+	// counter variable decremented atomically.
+	atomic.AddUint64(&q.counter, ^uint64(0))
+	return item
 }
