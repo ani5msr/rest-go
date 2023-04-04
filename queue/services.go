@@ -2,10 +2,12 @@ package queue
 
 import (
 	"sync"
+
+	"github.com/gammazero/deque"
 )
 
 type QueueInstance struct {
-	Q    []string
+	Q    deque.Deque[string]
 	Lock sync.RWMutex
 	Name string
 }
