@@ -10,7 +10,6 @@ import (
 	"strings"
 	"sync"
 
-	m "github.com/ani5msr/rest-go/queue"
 	"github.com/ani5msr/rest-go/redis"
 	"github.com/gammazero/deque"
 	"github.com/gorilla/mux"
@@ -34,7 +33,6 @@ type QueueInstance struct {
 	Name string
 }
 
-var comp m.QueueInstance
 var queuemap = make(map[string]*QueueInstance)
 
 func homePage(w http.ResponseWriter, r *http.Request) {
